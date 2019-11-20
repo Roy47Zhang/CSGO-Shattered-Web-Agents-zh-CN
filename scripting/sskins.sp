@@ -65,7 +65,7 @@ public Action ApplySkin(Handle timer, any:client)
 public Action SpecialSkin3(client,args)
 {
 	new Handle:menu = CreateMenu(AgencySELECTOR, MenuAction_Select  | MenuAction_End);
-	SetMenuTitle(menu, "请选择你的探员：");
+	SetMenuTitle(menu, "请选择你的探员等级：");
 	AddMenuItem(menu, "Reset", "重置");
 	AddMenuItem(menu, "DeservedAGENCY", "杰出级探员");
 	AddMenuItem(menu, "NomineeSDX", "特级探员");
