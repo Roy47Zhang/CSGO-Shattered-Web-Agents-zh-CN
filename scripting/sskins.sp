@@ -2,8 +2,8 @@
 
 #define DEBUG
 
-#define PLUGIN_AUTHOR "Tetragromaton"
-#define PLUGIN_VERSION "1.1"
+#define PLUGIN_AUTHOR "Tetragromaton/LOTGaming"
+#define PLUGIN_VERSION "1.0"
 
 #include <sourcemod>
 #include <sdktools>
@@ -18,12 +18,11 @@ public Plugin myinfo =
 {
 	name = "Special Skins",
 	author = PLUGIN_AUTHOR,
-	description = "Одень скины из обновления Расколотая сеть",
+	description = "Dress the Skins of the Broken Net Update",
 	version = PLUGIN_VERSION,
 	url = "tetradev.org"
 };
-Handle g_sDataSkin;//Terrorist
-Handle g_sDataSKIN_CT;//CTF
+Handle g_sDataSkin;
 public void OnPluginStart()
 {
 	g_Game = GetEngineVersion();
@@ -31,10 +30,9 @@ public void OnPluginStart()
 	{
 		SetFailState("This plugin is for CSGO/CSS only.");	
 	}
-	RegConsoleCmd("ssf", SpecialSkin3);
+	RegConsoleCmd("skins", SpecialSkin3);
 	HookEvent("player_spawn", OnPlayerSpawn);
-	g_sDataSkin = RegClientCookie("ss_skin_t", "", CookieAccess_Private);
-	g_sDataSKIN_CT = RegClientCookie("ss_skin_ct", "", CookieAccess_Private);
+	g_sDataSkin = RegClientCookie("ss_skin", "", CookieAccess_Private);
 }
 public IsValidClient(client)
 {
@@ -58,27 +56,21 @@ public Action ApplySkin(Handle timer, any:client)
 {
 	char SkinNISMO[255];
 	GetClientCookie(client, g_sDataSkin, SkinNISMO, sizeof(SkinNISMO));
-	char SkinNISMOXTUNE[255];
-	GetClientCookie(client, g_sDataSKIN_CT, SkinNISMOXTUNE, sizeof(SkinNISMOXTUNE));	
-	if(GetClientTeam(client) == CS_TEAM_CT && !StrEqual(SkinNISMO, ""))
+	if(!StrEqual(SkinNISMO, ""))
 	{
 		if (!IsModelPrecached(SkinNISMO))PrecacheModel(SkinNISMO);
 		Entity_SetModel(client, SkinNISMO);
-	}else if (GetClientTeam(client) == CS_TEAM_T && !StrEqual(SkinNISMOXTUNE, ""))
-	{
-		if (!IsModelPrecached(SkinNISMOXTUNE))PrecacheModel(SkinNISMOXTUNE);
-		Entity_SetModel(client, SkinNISMOXTUNE);	
 	}
 }
 public Action SpecialSkin3(client,args)
 {
 	new Handle:menu = CreateMenu(AgencySELECTOR, MenuAction_Select  | MenuAction_End);
-	SetMenuTitle(menu, "Выберите тип агента");
-	AddMenuItem(menu, "Reset", "Сбросить скин");
-	AddMenuItem(menu, "DeservedAGENCY", "Заслуженные агенты");
-	AddMenuItem(menu, "NomineeSDX", "Исключительные агенты");
-	AddMenuItem(menu, "PerfectAGNT", "Превосходные агенты");
-	AddMenuItem(menu, "MasterAGENT", "Мастерские агенты");
+	SetMenuTitle(menu, "请选择你的探员：");
+	AddMenuItem(menu, "Reset", "重置");
+	AddMenuItem(menu, "DeservedAGENCY", "杰出级探员");
+	AddMenuItem(menu, "NomineeSDX", "特级探员");
+	AddMenuItem(menu, "PerfectAGNT", "完美级探员");
+	AddMenuItem(menu, "MasterAGENT", "大师级探员");
 	DisplayMenu(menu, client, MENU_TIME_FOREVER);	
 }
 public AgencySELECTOR(Handle:menu, MenuAction:action, param1, param2)
@@ -110,8 +102,6 @@ public AgencySELECTOR(Handle:menu, MenuAction:action, param1, param2)
 			}else if(StrEqual(item, "Reset"))
 			{
 				SetClientCookie(param1, g_sDataSkin, "");
-				SetClientCookie(param1, g_sDataSKIN_CT, "");
-				PrintToChat(param1, "Параметры скинов были сброшены.");
 			}
 		}
 
@@ -127,42 +117,42 @@ public AgencySELECTOR(Handle:menu, MenuAction:action, param1, param2)
 SelectorMENUGEN(client, int type)
 {
 	new Handle:menu = CreateMenu(XCGSelector, MenuAction_Select | MenuAction_End);
-	SetMenuTitle(menu, "Выберите агента");
+	SetMenuTitle(menu, "选择你的探员：");
 	switch(type)
 	{
-		case 4://Мастерские
+		case 4://Workshops
 		{
-			AddMenuItem(menu, "19", "Капитан 3-го ранга Риксоу | NCWS SEAL");
-			AddMenuItem(menu, "20", "Особый агент АВА | ФБР");
-			AddMenuItem(menu, "21", "Доктор Романов | Кавалерия");
-			AddMenuItem(menu, "22", "Элитный мистер Мохлик | Элитный отряд");
+			AddMenuItem(menu, "19", "陆军少尉长官Ricksaw | 海军水面战中心海豹部队");
+			AddMenuItem(menu, "20", "Ava特工 | 联邦调查局（FBI）");
+			AddMenuItem(menu, "21", "“医生”Romanov | Sabre");
+			AddMenuItem(menu, "22", "精英Muhlik先生 | 精锐分子");
 		}
-		case 3://Превосходные агенты
+		case 3://Excellent agents
 		{
-			AddMenuItem(menu, "14", "Черноволк | Кавалерия");
-			AddMenuItem(menu, "15", "Майкл Сайферс | ФБР");
-			AddMenuItem(menu, "16", "''Дважды'' Маккой | USAF TACP");
-			AddMenuItem(menu, "17", "Профессор Шахмат | Элитный отряд");
-			AddMenuItem(menu, "18", "Резан Готовый | Кавалерия");
+			AddMenuItem(menu, "14", "Blackwolf | Sabre");
+			AddMenuItem(menu, "15", "Michael Syfers | 联邦调查局（FBI）狙击手");
+			AddMenuItem(menu, "16", "“两次”McCoy | 美国空军战术空中管制部队");
+			AddMenuItem(menu, "17", "Shahmat教授 | 精锐分子");
+			AddMenuItem(menu, "18", "准备就绪的Rezan | Sabre");
 		}
-		case 2://Исключительные агенты
+		case 2://Exceptional Agents
 		{
-			AddMenuItem(menu, "8", "Маркус Делроу | ФБР");
-			AddMenuItem(menu, "9", "Максимус | Кавалерия");
-			AddMenuItem(menu, "10", "Бакшот | NCWS Seal");
-			AddMenuItem(menu, "11", "Осирис | Элитный отряд");
-			AddMenuItem(menu, "12", "Мясник | Феникс");
-			AddMenuItem(menu, "13", "Драгомир | Кавалерия");
+			AddMenuItem(menu, "8", "Markus Delrow | 联邦调查局（FBI）人质营救队");
+			AddMenuItem(menu, "9", "Maximus | Sabre");
+			AddMenuItem(menu, "10", "铅弹 | 海军水面战中心海豹部队");
+			AddMenuItem(menu, "11", "Osiris | 精锐分子");
+			AddMenuItem(menu, "12", "弹弓 | 凤凰战士");
+			AddMenuItem(menu, "13", "Dragomir | Sabre");
 		}
-		case 1://Заслуженные агенты
+		case 1://Merited Agents
 		{
-			AddMenuItem(menu, "1", "Солдат SEAL TEAM 6 | NSWC SEAL");
-			AddMenuItem(menu, "2", "Третья рота коммандо | KSK");
-			AddMenuItem(menu, "3", "Оперативник | ФБР : SWAT");
-			AddMenuItem(menu, "4", "Диверсант | Элитный отряд");
-			AddMenuItem(menu, "5", "Головорез | Феникс");
-			AddMenuItem(menu, "6", "Солдат | Феникс");
-			AddMenuItem(menu, "7", "Офицер отряда B | SAS");
+			AddMenuItem(menu, "1", "海豹部队第六分队士兵 | 海军水面战中心海豹部队");
+			AddMenuItem(menu, "2", "第三特种兵连 | 德国特种部队突击队");
+			AddMenuItem(menu, "3", "特种兵 | 联邦调查局（FBI）特警");
+			AddMenuItem(menu, "4", "地面叛军 | 精锐分子");
+			AddMenuItem(menu, "5", "执行者 | 凤凰战士");
+			AddMenuItem(menu, "6", "枪手 | 凤凰战士");
+			AddMenuItem(menu, "7", "C Squadron指挥官 | 英国空军特别部队");
 		}
 		default:
 		{
@@ -187,131 +177,100 @@ public XCGSelector(Handle:menu, MenuAction:action, param1, param2)
 			char ModelName[255];
 			if(SPICK > 0)
 			{
-				int team = 0;
 				switch(SPICK)
 				{
 					case 6:
 					{
-						team = 2;
 						ModelName = "models/player/custom_player/legacy/tm_phoenix_varianth.mdl";
 					}
 					case 12:
 					{
-						team = 2;
 						ModelName = "models/player/custom_player/legacy/tm_phoenix_variantg.mdl";
 					}
 					case 5:
 					{
-						team = 2;
 						ModelName = "models/player/custom_player/legacy/tm_phoenix_variantf.mdl";
 					}
 					case 17:
 					{
-						team = 2;
 						ModelName = "models/player/custom_player/legacy/tm_leet_varianti.mdl";
 					}
 					case 4:
 					{
-						team = 2;
 						ModelName = "models/player/custom_player/legacy/tm_leet_variantg.mdl";
 					}
 					case 11:
 					{
-						team = 2;
 						ModelName = "models/player/custom_player/legacy/tm_leet_varianth.mdl";
 					}
 					case 14:
 					{
-						team = 2;
 						ModelName = "models/player/custom_player/legacy/tm_balkan_variantj.mdl";
 					}
 					case 9:
 					{
-						team = 2;
 						ModelName = "models/player/custom_player/legacy/tm_balkan_varianti.mdl";
 					}
 					case 21:
 					{
-						team = 2;
 						ModelName = "models/player/custom_player/legacy/tm_balkan_varianth.mdl";
 					}					
 					case 18:
 					{
-						team = 2;
 						ModelName = "models/player/custom_player/legacy/tm_balkan_variantg.mdl";
 					}
 					case 13:
 					{ 
-						team = 2;
 						ModelName = "models/player/custom_player/legacy/tm_balkan_variantf.mdl";
 					}
 					case 16:
 					{
-						team = 1;
 						ModelName = "models/player/custom_player/legacy/ctm_st6_variantm.mdl";
 					}
 					case 19:
 					{
-						team = 1;
 						ModelName = "models/player/custom_player/legacy/ctm_st6_varianti.mdl";
 					}
 					case 10:
 					{
-						team = 1;
 						ModelName = "models/player/custom_player/legacy/ctm_st6_variantg.mdl";
 					}
 					case 7:
 					{
-						team = 1;
 						ModelName = "models/player/custom_player/legacy/ctm_sas_variantf.mdl";
 					}
 					case 15:
 					{
-						team = 1;
 						ModelName = "models/player/custom_player/legacy/ctm_fbi_varianth.mdl";
 					}
 					case 8:
 					{
-						team = 1;
 						ModelName = "models/player/custom_player/legacy/ctm_fbi_variantg.mdl";
 					}
 					case 20:
 					{
-						team = 1;
 						ModelName = "models/player/custom_player/legacy/ctm_fbi_variantb.mdl";
 					}
 					case 22:
 					{
-						team = 2;//T
 						ModelName = "models/player/custom_player/legacy/tm_leet_variantf.mdl";
 					}
 					case 3:
 					{
-						team = 1;
 						ModelName = "models/player/custom_player/legacy/ctm_fbi_variantf.mdl";
 					}
 					case 1:
 					{
-						team = 1;//CT
 						ModelName = "models/player/custom_player/legacy/ctm_st6_variante.mdl";
 					}
 					case 2:
 					{
-						team = 1;
 						ModelName = "models/player/custom_player/legacy/ctm_st6_variantk.mdl";
 					}
 				}
 				//PrintToChatAll("%s", ModelName);
-				
-				if(team == 1)
-				{
-					SetClientCookie(param1, g_sDataSkin, ModelName);
-					PrintToChat(param1, "Модель агента за КТ будет установлена при следующем спавне.");
-				}else if(team == 2)
-				{
-					PrintToChat(param1, "Модель агента за Т будет установлена при следующем спавне.");
-					SetClientCookie(param1, g_sDataSKIN_CT, ModelName);
-				}
+				SetClientCookie(param1, g_sDataSkin, ModelName);
+				PrintToChat(param1, "您的探员模型将在下次重生应用");
 			}
 		}
 
